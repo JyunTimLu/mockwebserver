@@ -4,6 +4,7 @@ import android.app.Application;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
@@ -34,7 +35,7 @@ public class App extends Application {
 
     public static Retrofit.Builder post() {
 
-        return retrofit.addConverterFactory(GsonConverterFactory.create()).client(App.client);
+        return retrofit.addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(App.client);
     }
 
 }

@@ -1,7 +1,7 @@
 package tim.mockwebserver;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
+import rx.Observable;
 
 /**
  * Created by Tim on 2017/4/11.
@@ -10,5 +10,5 @@ import retrofit2.http.GET;
 public interface APIServices {
 
     @GET("ticket")
-    Call<BaseResponse<TicketModel>> getTicketList();
+    Observable<BaseResponse<TicketModel>> getTicketList();
 }
