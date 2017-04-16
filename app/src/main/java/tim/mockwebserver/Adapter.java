@@ -9,12 +9,12 @@ import java.util.List;
  * Created by Tim on 2017/4/13.
  */
 
-public class ticketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     List<TicketModel> ticketModelList;
 
-    public ticketAdapter(List<TicketModel> ticketModelList) {
+    public Adapter(List<TicketModel> ticketModelList) {
         this.ticketModelList = ticketModelList;
     }
 

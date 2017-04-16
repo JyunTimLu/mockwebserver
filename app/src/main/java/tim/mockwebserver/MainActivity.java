@@ -4,14 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements APILoadData {
 
     private LoadTicketListSubscriber loadTicketListSubscriber;
 
@@ -24,18 +24,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadData() {
         APIServices services = App.post().baseUrl(App.BASE_URL).build().create(APIServices.class);
-        loadTicketListSubscriber = new LoadTicketListSubscriber();
+        loadTicketListSubscriber = new LoadTicketListSubscriber(this);
         Observable<BaseResponse<TicketModel>> observable = services.getTicketList();
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(loadTicketListSubscriber);
     }
 
-    private void onDataLoaded(List<TicketModel> ticketModelList) {
-        for (TicketModel ticketModel : ticketModelList) {
-            Log.d("TAG", ticketModel.getItemName());
+
+    @Override
+    public void onDataLoaded(Object data) {
+
+        for (Object o : (ArrayList<?>) data) {
+            if (o instanceof TicketModel) {
+                Log.d("TAG", ((TicketModel) o).getItemName());
+            }
         }
+
     }
 
-    private class LoadTicketListSubscriber  extends Subscriber<BaseResponse<TicketModel>> {
+
+    private class LoadTicketListSubscriber extends Subscriber<BaseResponse<TicketModel>> {
+
+        private APILoadData apiLoadData;
+
+        LoadTicketListSubscriber(APILoadData apiLoadData) {
+            this.apiLoadData = apiLoadData;
+        }
+
         @Override
         public void onCompleted() {
 
@@ -49,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onNext(BaseResponse<TicketModel> response) {
             if (response.isSuccess()) {
-                onDataLoaded(response.getData());
+                apiLoadData.onDataLoaded(response.getData());
             }
         }
 
